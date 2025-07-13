@@ -1,7 +1,7 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'abstract_drawing_state.dart';
+import 'animation_direction.dart';
 import 'debug.dart';
 import 'drawing_state.dart';
 import 'drawing_state_with_ticker.dart';
@@ -44,6 +44,7 @@ class AnimatedDrawing extends StatefulWidget {
     this.onPaint,
     //For both
     this.animationOrder,
+    this.animationDirection = AnimationDirection.original,
     this.width,
     this.height,
     this.range,
@@ -91,6 +92,7 @@ class AnimatedDrawing extends StatefulWidget {
     this.onPaint,
     //For both
     this.animationOrder,
+    this.animationDirection = AnimationDirection.original,
     this.width,
     this.height,
     this.range,
@@ -146,6 +148,11 @@ class AnimatedDrawing extends StatefulWidget {
   ///Denotes the order in which the path elements are drawn to canvas when [lineAnimation] is set to [LineAnimation.oneByOne]. When no [animationOrder] is specified it defaults to [PathOrder.original]. Do not confuse this option with the default rendering order, whereas the first path elements are painted first to the canvas and therefore potentially occluded by subsequent elements ([w3-specs](https://www.w3.org/TR/SVG/render.html#RenderingOrder)). For now the rendering order always defaults to [PathOrder.original].
   final PathOrder? animationOrder;
 
+  /// Controls the direction of the animation - يتحكم في اتجاه الأنميشن
+  /// Specifies whether animation flows from left to right, right to left, or follows original order - يحدد ما إذا كان الأنميشن يتدفق من اليسار إلى اليمين أو من اليمين إلى اليسار أو يتبع الترتيب الأصلي
+  /// Defaults to [AnimationDirection.original] - افتراضياً [AnimationDirection.original]
+  final AnimationDirection animationDirection;
+
   /// When no custom animation controller is provided the state of the animation can be controlled via [run].
   ///
   /// Is [run] set to true the first animation cycle is triggered.
@@ -190,7 +197,6 @@ class AnimatedDrawing extends StatefulWidget {
 
   // TODO Refactor SRP
   void assertAnimationParameters() {
-    assert(!(controller == null &&
-        (run == null || duration == null)));
+    assert(!(controller == null && (run == null || duration == null)));
   }
 }

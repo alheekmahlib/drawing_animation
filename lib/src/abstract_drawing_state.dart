@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'dart:ui';
-import 'drawing_widget.dart';
+
+import 'animation_direction.dart';
 import 'debug.dart';
+import 'drawing_widget.dart';
 import 'line_animation.dart';
 import 'painter.dart';
 import 'parser.dart';
+import 'path_order.dart';
 import 'path_painter_builder.dart';
 import 'range.dart';
-import 'path_order.dart';
 
 /// Base class for _AnimatedDrawingState and _AnimatedDrawingWithTickerState
 abstract class AbstractAnimatedDrawingState extends State<AnimatedDrawing> {
@@ -137,9 +138,20 @@ abstract class AbstractAnimatedDrawingState extends State<AnimatedDrawing> {
         return;
       }
 
-      if (widget.animationOrder != animationOrder) {
-        pathSegments.sort(Extractor.getComparator(widget.animationOrder));
-        animationOrder = widget.animationOrder;
+      // Apply animation direction if specified - تطبيق اتجاه الأنميشن إذا تم تحديده
+      PathOrder? effectiveOrder = widget.animationOrder;
+
+      // If no custom order but direction is specified, create order from direction
+      // إذا لم يتم تحديد ترتيب مخصص ولكن تم تحديد الاتجاه، أنشئ ترتيب من الاتجاه
+      if (effectiveOrder == null &&
+          widget.animationDirection != AnimationDirection.original) {
+        effectiveOrder =
+            PathOrder.byAnimationDirection(widget.animationDirection);
+      }
+
+      if (effectiveOrder != animationOrder) {
+        pathSegments.sort(Extractor.getComparator(effectiveOrder));
+        animationOrder = effectiveOrder;
       }
     });
   }

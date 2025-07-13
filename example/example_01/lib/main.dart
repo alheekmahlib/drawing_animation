@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:drawing_animation/drawing_animation.dart';
 import 'package:flutter/material.dart';
 
@@ -18,10 +19,25 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool run = true;
+  AnimationDirection animationDirection = AnimationDirection.original;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  // Function to change animation direction - دالة لتغيير اتجاه الأنميشن
+  void _changeDirection(AnimationDirection direction) {
+    setState(() {
+      animationDirection = direction;
+      run = false; // Stop current animation - توقف الأنميشن الحالي
+    });
+    // Restart with new direction - إعادة التشغيل بالاتجاه الجديد
+    Future.delayed(Duration(milliseconds: 100), () {
+      setState(() {
+        run = true;
+      });
+    });
   }
 
   @override
@@ -32,6 +48,47 @@ class _MyHomePageState extends State<MyHomePage> {
                 run = !run;
               }),
           child: Icon((run) ? Icons.stop : Icons.play_arrow)),
+
+      // Add direction control buttons - إضافة أزرار التحكم في الاتجاه
+      bottomNavigationBar: Container(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () => _changeDirection(AnimationDirection.leftToRight),
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    animationDirection == AnimationDirection.leftToRight
+                        ? Colors.blue
+                        : Colors.grey,
+              ),
+              child: Text('يسار → يمين'),
+            ),
+            ElevatedButton(
+              onPressed: () => _changeDirection(AnimationDirection.rightToLeft),
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    animationDirection == AnimationDirection.rightToLeft
+                        ? Colors.blue
+                        : Colors.grey,
+              ),
+              child: Text('يمين ← يسار'),
+            ),
+            ElevatedButton(
+              onPressed: () => _changeDirection(AnimationDirection.original),
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    animationDirection == AnimationDirection.original
+                        ? Colors.blue
+                        : Colors.grey,
+              ),
+              child: Text('أصلي'),
+            ),
+          ],
+        ),
+      ),
+
       body: Center(
           child: Column(children: <Widget>[
         //Simplfied AnimatedDrawing using Flutter Path objects
@@ -48,6 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
           run: run,
           animationOrder: PathOrders.original,
+          animationDirection:
+              animationDirection, // Use selected direction - استخدام الاتجاه المحدد
           duration: Duration(seconds: 2),
           lineAnimation: LineAnimation.oneByOne,
           animationCurve: Curves.linear,
@@ -61,6 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
             child: AnimatedDrawing.svg(
           'assets/circle.svg',
           run: run,
+          animationDirection:
+              animationDirection, // Use selected direction - استخدام الاتجاه المحدد
           duration: Duration(seconds: 2),
           lineAnimation: LineAnimation.oneByOne,
           animationCurve: Curves.linear,

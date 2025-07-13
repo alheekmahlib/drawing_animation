@@ -68,8 +68,9 @@
 ///   ```
 library drawing_animation;
 
-export 'src/drawing_widget.dart';
-export 'src/path_order.dart' hide Extractor;
+export 'src/animation_direction.dart';
 export 'src/debug.dart' hide resetFrame, iterateFrame, getFrameCount;
-export 'src/range.dart';
+export 'src/drawing_widget.dart';
 export 'src/line_animation.dart';
+export 'src/path_order.dart' hide Extractor;
+export 'src/range.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/painting.dart';
 
+import 'animation_direction.dart';
 import 'parser.dart';
 
 /// Denotes the order of [PathSegment] elements (not public).
@@ -15,6 +16,11 @@ class PathOrder {
   /// The [PathSegment] order is defined according to its position in the overall bounding box. The position is defined as the center of the respective bounding box of each [PathSegment] element. The field [direction] specifies in which direction the position attribute is compared.
   PathOrder.byPosition({required AxisDirection direction})
       : _comparator = _byPosition(direction: direction);
+
+  /// Creates PathOrder based on animation direction - ينشئ ترتيب المسار بناءً على اتجاه الأنميشن
+  /// Used for controlling animation direction from left to right or right to left - يستخدم للتحكم في اتجاه الأنميشن من اليسار لليمين أو العكس
+  PathOrder.byAnimationDirection(AnimationDirection direction)
+      : _comparator = _byAnimationDirection(direction);
 
   /// Internal
   PathOrder._(this._comparator);
@@ -73,8 +79,20 @@ class PathOrder {
               .dy
               .compareTo(b.path.getBounds().center.dy);
         };
-      default:
-        return PathOrder._original()._getComparator();
+    }
+  }
+
+  /// Creates comparator for animation direction - ينشئ مقارن لاتجاه الأنميشن
+  /// Controls whether animation flows left to right or right to left - يتحكم في تدفق الأنميشن من اليسار لليمين أو العكس
+  static Comparator<PathSegment> _byAnimationDirection(
+      AnimationDirection direction) {
+    switch (direction) {
+      case AnimationDirection.leftToRight:
+        return _byPosition(direction: AxisDirection.right);
+      case AnimationDirection.rightToLeft:
+        return _byPosition(direction: AxisDirection.left);
+      case AnimationDirection.original:
+        return __original();
     }
   }
 
