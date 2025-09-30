@@ -29,14 +29,27 @@ assets:
     An AnimatedDrawing widget can be initiated in two ways:
     1. **Simplified - without animation controller (See [Example_01](https://github.com/biocarl/drawing_animation/tree/master/example/example_01))**
 
-        By default every animation repeats infinitely. For running an animation only once you can use a callback to set `run` to false after the first animation cycle completed (see field `onFinish`).
+        By default every animation repeats infinitely. You can control this behavior using the `repeat` parameter:
+        
+        **Infinite Animation (Default):**
+        ```dart
+        AnimatedDrawing.svg(
+          "assets/my_drawing.svg",
+          run: true,
+          duration: Duration(seconds: 3),
+          repeat: true, // Animation loops infinitely (default)
+        )
+        ```
+        
+        **Single Run Animation:**
         ```dart
         AnimatedDrawing.svg(
           "assets/my_drawing.svg",
           run: this.run,
-          duration: new Duration(seconds: 3),
+          duration: Duration(seconds: 3),
+          repeat: false, // Animation runs once and stops
           onFinish: () => setState(() {
-            this.run  = false;
+            this.run = false; // Stop after completion
           }),
         )
         ```
@@ -80,6 +93,8 @@ Here is increasingly growing list with all available parameters and their visual
 
 | Field            | Type                            | <pre> ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ </pre>Example<pre> ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ ‍ </pre> |
 | :---             |    :---:                       |     :---:     |
+| `repeat` <br/><br/> *Controls whether the animation should repeat infinitely or run only once. When set to `true` (default), the animation loops continuously. When set to `false`, the animation runs once and stops.* | `repeat: true` (default)        | Animation loops infinitely   |
+|                                    | `repeat: false`                | Animation runs once and stops  |
 | `lineAnimation` <br/><br/> *Specifies in which way the path elements are drawn to the canvas. When `allAtOnce` selected all path segments are drawn simultaneously. `oneByOne` paints every path segment one after another.* | `LineAnimation.oneByOne`        | <img src="https://github.com/biocarl/img/raw/master/drawing_animation/met_oneByOne.gif" width="200px">   |
 |                                    | `LineAnimation.allAtOnce`       | <img src="https://github.com/biocarl/img/raw/master/drawing_animation/met_allAtOnce.gif" width="200px">  |
 | `animationOrder` <br/><br/> *Denotes the order in which the path elements are drawn to canvas when `lineAnimation` is set to `LineAnimation.oneByOne`. When no `animationOrder` is specified it defaults to the same order specified in the Svg asset or path array (`PathOrder.original`).* | `PathOrders.original`           | <img src="https://github.com/biocarl/img/raw/master/drawing_animation/met_original.gif" width="200px">      |

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'debug.dart';
 import 'line_animation.dart';
 import 'painter.dart';

@@ -15,8 +15,10 @@ class AnimatedDrawingWithTickerState extends AbstractAnimatedDrawingState
           onFinishAnimationDefault();
         });
         //Animation is completed when last frame is painted not when animation controller is finished
-        if (controller!.status == AnimationStatus.dismissed ||
-            controller!.status == AnimationStatus.completed) {
+        // Only mark as finished if repeat is disabled - لا نضع علامة انتهاء إلا إذا كان التكرار معطلاً
+        if (!widget.repeat &&
+            (controller!.status == AnimationStatus.dismissed ||
+                controller!.status == AnimationStatus.completed)) {
           finished = true;
         }
       }
@@ -66,7 +68,15 @@ class AnimatedDrawingWithTickerState extends AbstractAnimatedDrawingState
         finished = false;
         controller!.reset();
         onFinishEvoked = false;
-        await controller!.forward();
+
+        // Check if repeat is enabled - فحص ما إذا كان التكرار مفعلاً
+        if (widget.repeat) {
+          // Use repeat() method for infinite loop - استخدام دالة repeat() للتكرار اللانهائي
+          controller!.repeat();
+        } else {
+          // Run animation only once - تشغيل الأنميشن مرة واحدة فقط
+          await controller!.forward();
+        }
       } else if ((controller!.status == AnimationStatus.forward) &&
           widget.run == false) {
         controller!.stop();

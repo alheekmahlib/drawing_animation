@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:ui';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:path_parsing/path_parsing.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:xml/xml.dart';
-import 'package:collection/collection.dart';
 
 //SVG parsing
 
@@ -20,8 +19,9 @@ class SvgParser {
   Color parseColor(String cStr) {
     if (cStr.isEmpty) throw UnsupportedError('Empty color field found.');
     if (cStr[0] == '#') {
-      return Color(int.parse(cStr.substring(1), radix: 16)).withOpacity(
-          1.0); // Hex to int: from https://stackoverflow.com/a/51290420/9452450
+      return Color(int.parse(cStr.substring(1), radix: 16)).withValues(
+          alpha:
+              1.0); // Hex to int: from https://stackoverflow.com/a/51290420/9452450
     } else if (cStr == 'none') {
       return Colors.transparent;
     } else {
@@ -70,7 +70,8 @@ class SvgParser {
         double? strokeWidth;
 
         //Attributes - [1] css-styling
-        var style = attributes.firstWhereOrNull((attr) => attr.name.local == 'style');
+        var style =
+            attributes.firstWhereOrNull((attr) => attr.name.local == 'style');
         if (style != null) {
           //Parse color of stroke
           var exp = RegExp(r'stroke:([^;]+);');
@@ -85,14 +86,14 @@ class SvgParser {
         }
 
         //Attributes - [2] svg-attributes
-        var strokeElement = attributes.firstWhereOrNull(
-            (attr) => attr.name.local == 'stroke');
+        var strokeElement =
+            attributes.firstWhereOrNull((attr) => attr.name.local == 'stroke');
         if (strokeElement != null) {
           color = parseColor(strokeElement.value);
         }
 
-        var strokeWidthElement = attributes.firstWhereOrNull(
-            (attr) => attr.name.local == 'stroke-width');
+        var strokeWidthElement = attributes
+            .firstWhereOrNull((attr) => attr.name.local == 'stroke-width');
         if (strokeWidthElement != null) {
           strokeWidth = double.tryParse(strokeWidthElement.value);
         }

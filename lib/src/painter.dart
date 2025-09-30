@@ -4,7 +4,6 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'debug.dart';
 import 'parser.dart';
@@ -259,7 +258,7 @@ abstract class PathPainter extends CustomPainter {
   void onFinish(Canvas canvas, Size size, {int lastPainted = -1}) {
     //-1: no segment was painted yet, 0 first segment
     if (debugOptions.recordFrames) {
-      final  picture = recorder.endRecording();
+      final picture = recorder.endRecording();
       var frame = getFrameCount(debugOptions);
       if (frame >= 0) {
         print('Write frame $frame');
@@ -280,8 +279,8 @@ abstract class PathPainter extends CustomPainter {
       //Color background
       // canvas.drawColor(Color.fromRGBO(224, 121, 42, 1.0),BlendMode.srcOver);
       //factor for higher resolution
-      canvas.scale(debugOptions.resolutionFactor,
-          debugOptions.resolutionFactor);
+      canvas.scale(
+          debugOptions.resolutionFactor, debugOptions.resolutionFactor);
     }
     paintPrepare(canvas, size);
     return canvas;
@@ -298,13 +297,9 @@ abstract class PathPainter extends CustomPainter {
       ui.Picture picture, String fileName, Size size) async {
     var scale = calculateScaleFactor(size);
     var byteData = await ((await picture.toImage(
-            (scale.x *
-                    debugOptions.resolutionFactor *
-                    pathBoundingBox!.width)
+            (scale.x * debugOptions.resolutionFactor * pathBoundingBox!.width)
                 .round(),
-            (scale.y *
-                    debugOptions.resolutionFactor *
-                    pathBoundingBox!.height)
+            (scale.y * debugOptions.resolutionFactor * pathBoundingBox!.height)
                 .round()))
         .toByteData(format: ui.ImageByteFormat.png));
     final buffer = byteData!.buffer;
@@ -354,9 +349,8 @@ abstract class PathPainter extends CustomPainter {
 
     if (scaleToViewport) {
       //Viewbox with Offset.zero
-      var viewBox = (customDimensions != null)
-          ? customDimensions
-          : Size.copy(size);
+      var viewBox =
+          (customDimensions != null) ? customDimensions : Size.copy(size);
       var scale = calculateScaleFactor(viewBox!);
       canvas.scale(scale.x, scale.y);
 
@@ -366,8 +360,7 @@ abstract class PathPainter extends CustomPainter {
 
       //Center offset - TODO should this be a option flag?
       if (debugOptions.recordFrames != true) {
-        var center = Offset(
-            (size.width / scale.x - pathBoundingBox!.width) / 2,
+        var center = Offset((size.width / scale.x - pathBoundingBox!.width) / 2,
             (size.height / scale.y - pathBoundingBox!.height) / 2);
         canvas.translate(center.dx, center.dy);
       }

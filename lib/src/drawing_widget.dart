@@ -45,6 +45,7 @@ class AnimatedDrawing extends StatefulWidget {
     //For both
     this.animationOrder,
     this.animationDirection = AnimationDirection.original,
+    this.repeat = true,
     this.width,
     this.height,
     this.range,
@@ -93,6 +94,7 @@ class AnimatedDrawing extends StatefulWidget {
     //For both
     this.animationOrder,
     this.animationDirection = AnimationDirection.original,
+    this.repeat = true,
     this.width,
     this.height,
     this.range,
@@ -152,6 +154,12 @@ class AnimatedDrawing extends StatefulWidget {
   /// Specifies whether animation flows from left to right, right to left, or follows original order - يحدد ما إذا كان الأنميشن يتدفق من اليسار إلى اليمين أو من اليمين إلى اليسار أو يتبع الترتيب الأصلي
   /// Defaults to [AnimationDirection.original] - افتراضياً [AnimationDirection.original]
   final AnimationDirection animationDirection;
+
+  /// Controls whether the animation should repeat infinitely - يتحكم في ما إذا كان الأنميشن يجب أن يتكرر إلى ما لا نهاية
+  /// When set to true, the animation will continuously repeat - عند تعيينه إلى true، سيتكرر الأنميشن بشكل مستمر
+  /// When set to false, the animation will run once and stop - عند تعيينه إلى false، سيعمل الأنميشن مرة واحدة ويتوقف
+  /// Defaults to true for backwards compatibility - افتراضياً true للتوافق مع الإصدارات السابقة
+  final bool repeat;
 
   /// When no custom animation controller is provided the state of the animation can be controlled via [run].
   ///

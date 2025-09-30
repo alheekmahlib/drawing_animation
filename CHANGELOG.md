@@ -1,5 +1,11 @@
 # CHANGES
 
+## 1.1.0
+* Add `repeat` property to control animation repetition - إضافة خاصية `repeat` للتحكم في تكرار الأنميشن
+* When `repeat` is `true` (default), animation loops infinitely - عندما يكون `repeat` هو `true` (افتراضي)، يتكرر الأنميشن إلى ما لا نهاية
+* When `repeat` is `false`, animation runs once and stops - عندما يكون `repeat` هو `false`، يعمل الأنميشن مرة واحدة ويتوقف
+* Fully backwards compatible - متوافق بالكامل مع الإصدارات السابقة
+
 ## 1.0.1
 * Add fix for resolving versions
 
