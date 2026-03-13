@@ -1,34 +1,37 @@
 import 'package:flutter/material.dart';
 
-import 'debug.dart';
-import 'line_animation.dart';
-import 'painter.dart';
-import 'parser.dart';
+import '../enums/line_animation.dart';
+import '../enums/paint_mode.dart';
+import '../models/debug_options.dart';
+import '../models/path_segment.dart';
+import 'all_at_once_painter.dart';
+import 'one_by_one_painter.dart';
+import 'path_painter.dart';
 
+/// Builds a [PathPainter] based on configuration parameters.
 class PathPainterBuilder {
-  PathPainterBuilder([LineAnimation? lineAnimation]) {
-    this.lineAnimation = lineAnimation!;
-  }
+  PathPainterBuilder(this.lineAnimation);
+
   late List<Paint> paints;
   void Function(int currentPaintedPathIndex)? onFinishFrame;
   late bool scaleToViewport;
   late DebugOptions debugOptions;
   late List<PathSegment> pathSegments;
-  late LineAnimation lineAnimation;
+  LineAnimation lineAnimation;
   late Animation<double> animation;
   Size? customDimensions;
+  PaintMode paintMode = PaintMode.strokeOnly;
 
   PathPainter build() {
     switch (lineAnimation) {
       case LineAnimation.oneByOne:
         return OneByOnePainter(animation, pathSegments, customDimensions,
-            paints, onFinishFrame, scaleToViewport, debugOptions);
+            paints, onFinishFrame, scaleToViewport, debugOptions,
+            paintMode: paintMode);
       case LineAnimation.allAtOnce:
         return AllAtOncePainter(animation, pathSegments, customDimensions,
-            paints, onFinishFrame, scaleToViewport, debugOptions);
-      default:
-        return PaintedPainter(animation, pathSegments, customDimensions, paints,
-            onFinishFrame, scaleToViewport, debugOptions);
+            paints, onFinishFrame, scaleToViewport, debugOptions,
+            paintMode: paintMode);
     }
   }
 
@@ -59,5 +62,9 @@ class PathPainterBuilder {
 
   void setPathSegments(List<PathSegment> pathSegments) {
     this.pathSegments = pathSegments;
+  }
+
+  void setPaintMode(PaintMode paintMode) {
+    this.paintMode = paintMode;
   }
 }

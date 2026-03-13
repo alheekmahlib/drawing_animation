@@ -1,10 +1,13 @@
-/// Denotes a range of path segments over which a animation is built.
+/// Denotes a range of path segments over which an animation is built.
 ///
-/// Segments below that range will be painted with the first frame of the animation and therefore not iteratively. Segments above that range will be excluded from the animation. This class must not be inherited.
+/// Segments below that range will be painted with the first frame of the
+/// animation and therefore not iteratively. Segments above that range will be
+/// excluded from the animation.
 abstract class AnimationRange {
   AnimationRange(this.start, this.end) {
     assert(start! <= end! && start! >= 0 && end! >= 0);
   }
+
   final int? start;
   final int? end;
 
@@ -12,8 +15,11 @@ abstract class AnimationRange {
   bool get isUpper => end != null;
 
   @override
-  bool operator ==(Object o) =>
-      o is AnimationRange && start == o.start && end == o.end;
+  bool operator ==(Object other) =>
+      other is AnimationRange && start == other.start && end == other.end;
+
+  @override
+  int get hashCode => Object.hash(start, end);
 }
 
 /// Denotes a range by its relative position in the Path array provided.

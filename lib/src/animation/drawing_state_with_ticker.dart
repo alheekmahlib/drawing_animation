@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'abstract_drawing_state.dart';
-import 'drawing_widget.dart';
+import '../widget/animated_drawing.dart';
 
-/// A state implementation with an implemented animation controller to simplify the animation process
+/// A state implementation with an internal animation controller to simplify
+/// the animation process.
 class AnimatedDrawingWithTickerState extends AbstractAnimatedDrawingState
     with SingleTickerProviderStateMixin {
   AnimatedDrawingWithTickerState() : super() {
@@ -12,10 +13,8 @@ class AnimatedDrawingWithTickerState extends AbstractAnimatedDrawingState
       if (onFinishEvoked == false) {
         onFinishEvoked = true;
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          onFinishAnimationDefault();
+          _onFinishAnimationDefault();
         });
-        //Animation is completed when last frame is painted not when animation controller is finished
-        // Only mark as finished if repeat is disabled - لا نضع علامة انتهاء إلا إذا كان التكرار معطلاً
         if (!widget.repeat &&
             (controller!.status == AnimationStatus.dismissed ||
                 controller!.status == AnimationStatus.completed)) {
@@ -25,7 +24,12 @@ class AnimatedDrawingWithTickerState extends AbstractAnimatedDrawingState
     };
   }
 
-  //Manage state
+  void _onFinishAnimationDefault() {
+    if (widget.onFinish != null) {
+      widget.onFinish!();
+    }
+  }
+
   bool paused = false;
   bool finished = true;
 
@@ -57,7 +61,6 @@ class AnimatedDrawingWithTickerState extends AbstractAnimatedDrawingState
     return createCustomPaint(context);
   }
 
-//
   Future<void> buildAnimation() async {
     try {
       if ((paused ||
@@ -69,12 +72,9 @@ class AnimatedDrawingWithTickerState extends AbstractAnimatedDrawingState
         controller!.reset();
         onFinishEvoked = false;
 
-        // Check if repeat is enabled - فحص ما إذا كان التكرار مفعلاً
         if (widget.repeat) {
-          // Use repeat() method for infinite loop - استخدام دالة repeat() للتكرار اللانهائي
           controller!.repeat();
         } else {
-          // Run animation only once - تشغيل الأنميشن مرة واحدة فقط
           await controller!.forward();
         }
       } else if ((controller!.status == AnimationStatus.forward) &&
@@ -83,7 +83,7 @@ class AnimatedDrawingWithTickerState extends AbstractAnimatedDrawingState
         paused = true;
       }
     } on TickerCanceled {
-      // TODO usecase?
+      // Widget was disposed during animation.
     }
   }
 }

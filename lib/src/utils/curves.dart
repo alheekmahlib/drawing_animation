@@ -1,16 +1,18 @@
 import 'package:flutter/animation.dart';
 
-///Compresses another function by left and right border
+/// Compresses another function by left and right border.
 class YCompressionCurve extends Curve {
   YCompressionCurve(this.a, this.b) {
     assert(b >= a);
   }
 
-  //for bounded curves
+  // For bounded curves.
   final double total = 1.0;
-  //lower bound
+
+  // Lower bound.
   final double a;
-  //upper bound
+
+  // Upper bound.
   final double b;
 
   @override

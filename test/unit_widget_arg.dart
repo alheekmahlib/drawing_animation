@@ -1,8 +1,9 @@
+import 'dart:ui';
+
+import 'package:drawing_animation/src/widget/animated_drawing.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'mocks.dart';
-import 'dart:ui';
-import 'package:drawing_animation/src/drawing_widget.dart';
 
 void main() {
   test('Test arguments for SvgDrawing widget creation', () {
